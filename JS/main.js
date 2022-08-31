@@ -19,9 +19,11 @@ function start() {
 }
 
 function animate() {
-  if (player.lose) { //TODO: add play again option
+  if (player.lose) { //TODO: add a  play again option
     printMsg('You Lose!');
-    return
+    addEventListener('click', function (event) {
+      BICHYOUN(event);
+    }, false);
   }
   else if (player.play) {
     ctx.clearRect(0, 0, innerWidth, innerHeight);
@@ -90,10 +92,25 @@ function isInside(MousePos, x_pos, width, y_pos, height) { //TODO: Take out to m
     MousePos.y < y_pos + height
 }
 
+function BICHYOUN(event) {
+  const mousePos = getMousePos(canvas, event);
+  if (isInside(mousePos,
+    canvas.width - getWidthOfText(player.BICHYOUN, 'Arial', '20px'),
+    canvas.width - getWidthOfText(player.BICHYOUN, 'Arial', '20px') + getWidthOfText(' יש לי בכיון', 'Arial', '20px'),
+    40,
+    40
+  ) && player.BICHYOUN == 'יש לי בכיון ') {
+    player.BICHYOUN = "בזבזת את הבכיון "
+    player.lose = false;
+    grid.enemys = [];
+    grid.createGrid();
+  }
+}
+
 addEventListener('click', function (event) {
   const mousePos = getMousePos(canvas, event);
 
-  if (isInside(mousePos,pauseBtn.x_pos,pauseBtn.width,pauseBtn.y_pos,pauseBtn.height)) {
+  if (isInside(mousePos, pauseBtn.x_pos, pauseBtn.width, pauseBtn.y_pos, pauseBtn.height)) {
     if (pauseBtn.image.src.endsWith("img/pause.jpg")) {
       pauseBtn.image.src = './img/play.jpg'
       player.play = false
@@ -104,20 +121,8 @@ addEventListener('click', function (event) {
   }
 }, false);
 
-addEventListener('click', function (event) {
-  const mousePos = getMousePos(canvas, event);
-  if (isInside(mousePos,
-    canvas.width - getWidthOfText(this.BICHYOUN, 'Arial', '20px'),
-    canvas.width - getWidthOfText(this.BICHYOUN, 'Arial', '20px') + getWidthOfText(' יש לי בכיון', 'Arial', '20px'),
-    40,
-    40
-  )) {
-    player.BICHYOUN = "בזבזת את הבכיון "
-  }
-}, false);
-
 const player = new Player();
-const grid = new Grid(2, 3, 10)
+const grid = new Grid(15, 3, 10)
 const pauseBtn = new PauseBtn();
 const stars = new Stars();
 
@@ -129,7 +134,7 @@ export function getWidthOfText(txt, fontname, fontsize) {
     getWidthOfText.c = document.createElement('canvas');
     getWidthOfText.ctx = getWidthOfText.c.getContext('2d');
   }
-  const fontspec = fontsize + ' ' + fontname;
+  const fontspec = fontsize + ' ' + fontname; // TODO: change to given parm
   if (getWidthOfText.ctx.font !== fontspec)
     getWidthOfText.ctx.font = fontspec;
   return getWidthOfText.ctx.measureText(txt).width;

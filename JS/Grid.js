@@ -13,11 +13,7 @@ export class Grid {
         this.height = coloms * 39 //TODO: change to enemy image height
         this.enemys = [];
         this.levelUp = false;
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.coloms; j++) {
-                this.enemys.push(new Enemy(j * 31, i * 39));
-            }
-        }
+        this.createGrid()
     };
 
     draw() {
@@ -30,11 +26,7 @@ export class Grid {
             } else {
                 this.speed = (this.speed * -1) + 1;
             }
-            for (let i = 0; i < this.rows; i++) {
-                for (let j = 0; j < this.coloms; j++) {
-                    this.enemys.push(new Enemy(j * 31, i * 39));
-                }
-            }
+            this.createGrid()
             this.levelUp = false;
         }
         this.enemys.forEach((enemy) => {
@@ -42,9 +34,9 @@ export class Grid {
         })
     }
 
-    update() { 
+    update() {
         this.draw();
-      
+
         for (const enemy of this.enemys) {
             if (enemy.x_pos < 0 || enemy.x_pos + enemy.width >= canvas.width) {
                 this.speed = -this.speed;
@@ -60,5 +52,13 @@ export class Grid {
         this.enemys.forEach((enemy) => {
             enemy.x_pos += this.speed;
         })
+    }
+
+    createGrid() {
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.coloms; j++) {
+                this.enemys.push(new Enemy(j * 31, i * 39));
+            }
+        }
     }
 }
