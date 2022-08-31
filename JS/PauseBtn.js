@@ -29,19 +29,4 @@ export class PauseBtn {
     update() {
         this.draw();
     }
-    
-     getMousePos(canvas, event) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-            x: event.clientX - rect.left,
-            y: event.clientY - rect.top
-        };
-    }
-    
-     isInside(pos) {
-        return pos.x > this.x_pos &&
-            pos.x < this.x_pos + this.width &&
-            pos.y < this.y_pos + this.height &&
-            pos.y > this.y_pos
-    }
 }

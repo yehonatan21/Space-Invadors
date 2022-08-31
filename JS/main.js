@@ -20,9 +20,7 @@ function start() {
 
 function animate() {
   if (player.lose) { //TODO: add play again option
-    ctx.font = "80px Arial";
-    ctx.fillStyle = "green";
-    ctx.fillText("You Lose!", (canvas.width / 2) - getWidthOfText('You Lose!','Arial','80px')/2, canvas.height / 2) 
+    printMsg('You Lose!');
     return
   }
   else if (player.play) {
@@ -71,10 +69,31 @@ function isTouchingSpaceship() { // FIXME
   })
 }
 
-addEventListener('click', function (event) {
-  const mousePos = pauseBtn.getMousePos(canvas, event);
+function printMsg(msg) {
+  ctx.font = "80px Arial";
+  ctx.fillStyle = "green";
+  ctx.fillText(msg, (canvas.width / 2) - getWidthOfText(msg, 'Arial', '80px') / 2, canvas.height / 2)
+}
 
-  if (pauseBtn.isInside(mousePos)) {
+function getMousePos(canvas, event) {  //TODO: Take out to main?
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top
+  };
+}
+
+function isInside(MousePos, x_pos, width, y_pos, height) { //TODO: Take out to main?
+  return MousePos.x > x_pos &&
+    MousePos.x < x_pos + width &&
+    MousePos.y > y_pos &&
+    MousePos.y < y_pos + height
+}
+
+addEventListener('click', function (event) {
+  const mousePos = getMousePos(canvas, event);
+
+  if (isInside(mousePos,pauseBtn.x_pos,pauseBtn.width,pauseBtn.y_pos,pauseBtn.height)) {
     if (pauseBtn.image.src.endsWith("img/pause.jpg")) {
       pauseBtn.image.src = './img/play.jpg'
       player.play = false
@@ -85,23 +104,33 @@ addEventListener('click', function (event) {
   }
 }, false);
 
+addEventListener('click', function (event) {
+  const mousePos = getMousePos(canvas, event);
+  if (isInside(mousePos,
+    canvas.width - getWidthOfText(this.BICHYOUN, 'Arial', '20px'),
+    canvas.width - getWidthOfText(this.BICHYOUN, 'Arial', '20px') + getWidthOfText(' יש לי בכיון', 'Arial', '20px'),
+    40,
+    40
+  )) {
+    player.BICHYOUN = "בזבזת את הבכיון "
+  }
+}, false);
+
 const player = new Player();
-const grid = new Grid(3, 3, 10)
+const grid = new Grid(2, 3, 10)
 const pauseBtn = new PauseBtn();
 const stars = new Stars();
 
 start();
 animate();
 
-export function getWidthOfText(txt, fontname, fontsize){
-  if(getWidthOfText.c === undefined){
-      getWidthOfText.c=document.createElement('canvas');
-      getWidthOfText.ctx=getWidthOfText.c.getContext('2d');
+export function getWidthOfText(txt, fontname, fontsize) {
+  if (getWidthOfText.c === undefined) {
+    getWidthOfText.c = document.createElement('canvas');
+    getWidthOfText.ctx = getWidthOfText.c.getContext('2d');
   }
-  var fontspec = fontsize + ' ' + fontname;
-  if(getWidthOfText.ctx.font !== fontspec)
-      getWidthOfText.ctx.font = fontspec;
+  const fontspec = fontsize + ' ' + fontname;
+  if (getWidthOfText.ctx.font !== fontspec)
+    getWidthOfText.ctx.font = fontspec;
   return getWidthOfText.ctx.measureText(txt).width;
 }
-
-console.log(getWidthOfText('You Lose!','Arial','80px'));

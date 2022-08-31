@@ -1,7 +1,7 @@
 'use strict';
 
 import { Shot } from "./Shot.js";
-import {getWidthOfText} from "./main.js"
+import { getWidthOfText } from "./main.js"
 
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
@@ -15,6 +15,7 @@ export class Player {
     this.shots = [];
     this.lose = false;
     this.play = true;
+    this.BICHYOUN = 'יש לי בכיון '
     this.keys = {
       arrowLeft: {
         pressed: false
@@ -35,7 +36,7 @@ export class Player {
           break;
 
         case ' ':
-          this.shots.push(new Shot(this.x_pos + this.width / 2, this.y_pos));
+          this.shots.push(new Shot(this.x_pos + this.width / 2, this.y_pos, -15, 'red'));
           break;
       }
     });
@@ -85,6 +86,10 @@ export class Player {
     }
     ctx.font = "20px Arial";
     ctx.fillStyle = "white";
-    ctx.fillText("Score:" + this.score, canvas.width - getWidthOfText(`Score: ${this.score}`,'Arial','20px'), 30);
+    ctx.fillText("Score: " + this.score, canvas.width - getWidthOfText(`Score: ${this.score} `, 'Arial', '20px'), 30);
+
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "white";
+    ctx.fillText(this.BICHYOUN, canvas.width - getWidthOfText(this.BICHYOUN, 'Arial', '20px'), 60);
   }
 }
