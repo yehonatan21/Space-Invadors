@@ -42,17 +42,19 @@ export class Grid {
         })
     }
 
-    update() { // FIXME: the last enemy in the enemys array is the one setting the rigth side of the grid 
+    update() { 
         this.draw();
-        try {
-            if (this.enemys[0].x_pos < 0 || this.enemys[this.enemys.length - 1].x_pos + this.enemys[this.enemys.length - 1].width >= canvas.width) {
+      
+        for (const enemy of this.enemys) {
+            if (enemy.x_pos < 0 || enemy.x_pos + enemy.width >= canvas.width) {
                 this.speed = -this.speed;
                 this.enemys.forEach((enemy) => {
                     enemy.y_pos += enemy.height / 2;
                 })
+                break;
             }
         }
-        catch (err) {
+        if (this.enemys.length == 0) {
             this.levelUp = true;
         }
         this.enemys.forEach((enemy) => {
