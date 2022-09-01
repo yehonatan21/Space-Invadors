@@ -12,10 +12,11 @@ export class Game {
         this.canvas.width = window.innerWidth;
         this.ctx = this.canvas.getContext('2d');
         this.player = new Player(this.ctx, this.canvas.width / 2, this.canvas.height);
-        this.grid = new Grid(15, 3, 10, this.canvas, this.ctx)
+        this.grid = new Grid(3, 3, 10, this.canvas, this.ctx)
         this.pauseBtn = new PauseBtn(this.ctx);
         this.stars = new Stars(this.canvas, this.ctx);
         this.play = true;
+        this.frames = 0;
         this.BICHYOUN = 'יש לי בכיון ';
         this.canvas.addEventListener('click', (event) => {
             if (this.isInside(this.getMousePos(event), this.pauseBtn.x_pos, this.pauseBtn.width, this.pauseBtn.y_pos, this.pauseBtn.height)) {
@@ -31,14 +32,28 @@ export class Game {
     }
 
     updete() {
+        this.printScore();
+        this.printBICHYOUN();
+    };
+
+    printScore() {
         this.ctx.font = "20px Arial";
         this.ctx.fillStyle = "white";
         this.ctx.fillText("Score:" + this.player.score, this.canvas.width - this.getWidthOfText(`Score: ${this.player.score}`, '20px Arial'), 30);
+    }
 
+    printNewLevel() {
+        this.printMsg('Level Up!',
+            "80px Arial",
+            (this.canvas.width / 2) - this.getWidthOfText('Level Up!', '80px Arial') / 2,
+            this.canvas.height / 2)
+    }
+
+    printBICHYOUN() {
         this.ctx.font = "20px Arial";
         this.ctx.fillStyle = "white";
         this.ctx.fillText(this.BICHYOUN, this.canvas.width - this.getWidthOfText(this.BICHYOUN, '20px Arial'), 60);
-    };
+    }
 
     pauseGame(event) {
         const mousePos = this.getMousePos(event);
@@ -71,15 +86,35 @@ export class Game {
         else if (this.play) {
             this.ctx.clearRect(0, 0, innerWidth, innerHeight);
             this.checkEnemyHit();
+            this.isLevelUp();
             this.checkIfShotOutOfScreen();
             this.isTouchingSpaceship();
-            this.player.update();
             this.updete();
+            this.player.update();
             this.grid.update();
             this.stars.update();
         }
         this.pauseBtn.update();
         requestAnimationFrame(() => this.#animate());
+    }
+
+    isLevelUp() {
+        if (this.grid.enemys.length == 0) {
+            if (this.frames != 100) {
+                this.printNewLevel();
+                this.frames++;
+            } else if (this.frames == 100) {
+                this.grid.rows += 1;
+                this.grid.coloms += 1;
+                if (Math.sign(this.grid.speed) == 1) {
+                    this.speed += 1;
+                } else {
+                    this.speed = (this.grid.speed * -1) + 1;
+                }
+                this.grid.createGrid();
+                this.frames = 0;
+            }
+        }
     }
 
     bichyoun(event) {
@@ -174,9 +209,9 @@ export class Game {
             this.canvas.height / 2 + this.getHeightOfText('Play Again?', '40px Arial'),
             this.getHeightOfText('You Lose!', '80px Arial'))
         ) {
-            this.grid = new Grid(3, 3, 10, this.canvas, this.ctx)
+            this.BICHYOUN = 'יש לי בכיון ';
+            this.grid = new Grid(17, 3, 10, this.canvas, this.ctx)
             this.player = new Player(this.ctx, this.canvas.width / 2, this.canvas.height);
-            console.log("done!")
         }
     };
     printMsg(msg, fontSize, x_pos, y_pos) {
