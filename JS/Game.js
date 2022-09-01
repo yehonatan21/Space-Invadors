@@ -11,13 +11,13 @@ export class Game {
         this.canvas.height = window.innerHeight - 4; //FIXME:
         this.canvas.width = window.innerWidth;
         this.ctx = this.canvas.getContext('2d');
-        this.player = new Player(this.canvas, this.ctx);
-        this.grid = new Grid(17, 3, 10, this.canvas, this.ctx)
+        this.player = new Player(this.ctx, this.canvas.width / 2, this.canvas.height);
+        this.grid = new Grid(15, 3, 10, this.canvas, this.ctx)
         this.pauseBtn = new PauseBtn(this.ctx); // FIXME: Add addEventListener to the pauseBtn
         this.stars = new Stars(this.canvas, this.ctx);
         this.play = true;
         this.BICHYOUN = 'יש לי בכיון ';
-        // this.pauseBtn.addEventListener('click', function (event) {
+        // this.pauseBtn.addEventListener('click', (event) => {
         //     this.getMousePos(event);
         //     if(isInside()){
         //         this.play = false;
@@ -40,6 +40,40 @@ export class Game {
         if (this.isInside(mousePos, this.pauseBtn.x_pos, this.pauseBtn.width, this.pauseBtn.y_pos, this.pauseBtn.height)) {
             this.play = false;
         }
+    }
+
+    start() {
+        this.#animate();
+    }
+
+    #animate() {
+        if (this.player.lose) { //TODO: add a play again option
+            this.printMsg('You Lose!',
+                "80px Arial",
+                (this.canvas.width / 2) - this.getWidthOfText('You Lose!', '80px Arial') / 2,
+                this.canvas.height / 2);
+
+            this.printMsg('Play Again?',
+                "40px Arial",
+                (this.canvas.width / 2) - this.getWidthOfText('Play Again?', '40px Arial') / 2,
+                this.canvas.height / 2 + this.getHeightOfText('You Lose!', '80px Arial'));
+
+            this.canvas.addEventListener('click', (event) => {
+                this.bichyoun(event);
+                this.playAgain(event);
+            }, false);
+        }
+        else if (this.play) {
+            this.ctx.clearRect(0, 0, innerWidth, innerHeight);
+            this.checkEnemyHit();
+            this.isTouchingSpaceship();
+            this.player.update();
+            this.updete();
+            this.grid.update();
+            this.stars.update();
+        }
+        this.pauseBtn.update();
+        requestAnimationFrame(() => this.#animate());
     }
 
     bichyoun(event) {

@@ -3,11 +3,10 @@
 import { Shot } from "./Shot.js";
 
 export class Player {
-  constructor(canvas, ctx) {
-    this.canvas = canvas;
+  constructor(ctx, x_pos, y_pos) {
     this.ctx = ctx;
-    this.x_pos;
-    this.y_pos;
+    this.x_pos = x_pos;
+    this.y_pos = y_pos;
     this.score = 0;
     this.speed = 15;
     this.shots = [];
@@ -31,7 +30,7 @@ export class Player {
           break;
 
         case ' ':
-          this.shots.push(new Shot(this.x_pos + this.width / 2, this.y_pos, -15, 'red',this.ctx));
+          this.shots.push(new Shot(this.x_pos + this.width / 2, this.y_pos, -15, 'red', this.ctx));
           break;
       }
     });
@@ -55,8 +54,8 @@ export class Player {
       this.image = image;
       this.width = image.width * scale;
       this.height = image.height * scale;
-      this.x_pos = this.canvas.width / 2 - this.width / 2;
-      this.y_pos = this.canvas.height - this.height;
+      this.x_pos -= this.width / 2;
+      this.y_pos -= this.height;
     };
   }
 
