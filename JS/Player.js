@@ -1,21 +1,17 @@
 'use strict';
 
 import { Shot } from "./Shot.js";
-import { getWidthOfText } from "./main.js"
-
-let canvas = document.getElementById('canvas');
-let ctx = canvas.getContext('2d');
 
 export class Player {
-  constructor() {
+  constructor(canvas, ctx) {
+    this.canvas = canvas;
+    this.ctx = ctx;
     this.x_pos;
     this.y_pos;
     this.score = 0;
     this.speed = 15;
     this.shots = [];
     this.lose = false;
-    this.play = true;
-    this.BICHYOUN = 'יש לי בכיון '
     this.keys = {
       arrowLeft: {
         pressed: false
@@ -24,7 +20,6 @@ export class Player {
         pressed: false
       }
     };
-
     addEventListener('keydown', ({ key }) => {
       switch (key) {
         case 'ArrowLeft':
@@ -36,7 +31,7 @@ export class Player {
           break;
 
         case ' ':
-          this.shots.push(new Shot(this.x_pos + this.width / 2, this.y_pos, -15, 'red'));
+          this.shots.push(new Shot(this.x_pos + this.width / 2, this.y_pos, -15, 'red',this.ctx));
           break;
       }
     });
@@ -60,14 +55,14 @@ export class Player {
       this.image = image;
       this.width = image.width * scale;
       this.height = image.height * scale;
-      this.x_pos = canvas.width / 2 - this.width / 2;
-      this.y_pos = canvas.height - this.height;
+      this.x_pos = this.canvas.width / 2 - this.width / 2;
+      this.y_pos = this.canvas.height - this.height;
     };
   }
 
   draw() {
     if (this.image) {
-      ctx.drawImage(
+      this.ctx.drawImage(
         this.image,
         this.x_pos,
         this.y_pos,
@@ -84,12 +79,5 @@ export class Player {
     } else if (this.keys.arrowRight.pressed && this.x_pos + this.width <= innerWidth) {
       this.x_pos += this.speed;
     }
-    ctx.font = "20px Arial";
-    ctx.fillStyle = "white";
-    ctx.fillText("Score: " + this.score, canvas.width - getWidthOfText(`Score: ${this.score} `, 'Arial', '20px'), 30);
-
-    ctx.font = "20px Arial";
-    ctx.fillStyle = "white";
-    ctx.fillText(this.BICHYOUN, canvas.width - getWidthOfText(this.BICHYOUN, 'Arial', '20px'), 60);
   }
 }

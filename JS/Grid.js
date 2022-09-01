@@ -2,10 +2,10 @@
 
 import { Enemy } from "./Enemy.js";
 
-let canvas = document.getElementById('canvas');
-
 export class Grid {
-    constructor(rows, coloms, speed) {
+    constructor(rows, coloms, speed, canvas, ctx) {
+        this.canvas = canvas;
+        this.ctx = ctx;
         this.rows = rows;
         this.coloms = coloms;
         this.speed = speed;
@@ -36,7 +36,6 @@ export class Grid {
 
     update() {
         this.draw();
-
         for (const enemy of this.enemys) {
             if (enemy.x_pos < 0 || enemy.x_pos + enemy.width >= canvas.width) {
                 this.speed = -this.speed;
@@ -57,7 +56,7 @@ export class Grid {
     createGrid() {
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.coloms; j++) {
-                this.enemys.push(new Enemy(j * 31, i * 39));
+                this.enemys.push(new Enemy(j * 31, i * 39,this.canvas,this.ctx));
             }
         }
     }

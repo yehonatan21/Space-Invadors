@@ -1,10 +1,8 @@
 'use strict';
 
-let canvas = document.getElementById('canvas');
-let ctx = canvas.getContext('2d');
-
 export class PauseBtn {
-    constructor() {
+    constructor(ctx) {
+        this.ctx = ctx;
         this.image = new Image();
         this.image.src = './img/pause.jpg';
         this.image.onload = () => {
@@ -17,7 +15,7 @@ export class PauseBtn {
     }
 
     draw() {
-        ctx.drawImage(
+        this.ctx.drawImage(
             this.image,
             this.x_pos,
             this.y_pos,
