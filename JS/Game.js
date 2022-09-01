@@ -13,16 +13,21 @@ export class Game {
         this.ctx = this.canvas.getContext('2d');
         this.player = new Player(this.ctx, this.canvas.width / 2, this.canvas.height);
         this.grid = new Grid(15, 3, 10, this.canvas, this.ctx)
-        this.pauseBtn = new PauseBtn(this.ctx); // FIXME: Add addEventListener to the pauseBtn
+        this.pauseBtn = new PauseBtn(this.ctx);
         this.stars = new Stars(this.canvas, this.ctx);
         this.play = true;
         this.BICHYOUN = 'יש לי בכיון ';
-        // this.pauseBtn.addEventListener('click', (event) => {
-        //     this.getMousePos(event);
-        //     if(isInside()){
-        //         this.play = false;
-        //     }
-        //   }, false)
+        this.canvas.addEventListener('click', (event) => {
+            if (this.isInside(this.getMousePos(event), this.pauseBtn.x_pos, this.pauseBtn.width, this.pauseBtn.y_pos, this.pauseBtn.height)) {
+                if (this.play) {
+                    this.play = false;
+                    this.pauseBtn.image.src = './img/play.jpg'
+                } else {
+                    this.play = true;
+                    this.pauseBtn.image.src = './img/pause.jpg'
+                }
+            }
+        }, false);
     }
 
     updete() {
@@ -66,6 +71,7 @@ export class Game {
         else if (this.play) {
             this.ctx.clearRect(0, 0, innerWidth, innerHeight);
             this.checkEnemyHit();
+            this.checkIfShotOutOfScreen();
             this.isTouchingSpaceship();
             this.player.update();
             this.updete();
@@ -134,13 +140,18 @@ export class Game {
                 }
             }
             )
-            if (shot.y_pos + shot.radius <= 0) { //TODO: take out to new function? 
+        })
+    };
+
+    checkIfShotOutOfScreen() {
+        this.player.shots.forEach((shot) => {
+            if (shot.y_pos + shot.radius <= 0) {
                 this.player.shots.splice(shot, 1)
             } else {
                 shot.update();
             }
         })
-    };
+    }
 
     isTouchingSpaceship() {
         this.grid.enemys.forEach((enemy) => {
@@ -155,6 +166,7 @@ export class Game {
     };
 
     playAgain(event) {
+        // this.canvas.removeEventListener("click", (event) => {this.bichyoun(event);this.playAgain(event);}, false); //how to removeEventListener with arrow function 
         const mousePos = this.getMousePos(event);
         if (this.isInside(mousePos,
             (this.canvas.width / 2) - this.getWidthOfText('Play Again?', '40px Arial') / 2,
@@ -162,6 +174,8 @@ export class Game {
             this.canvas.height / 2 + this.getHeightOfText('Play Again?', '40px Arial'),
             this.getHeightOfText('You Lose!', '80px Arial'))
         ) {
+            this.grid = new Grid(3, 3, 10, this.canvas, this.ctx)
+            this.player = new Player(this.ctx, this.canvas.width / 2, this.canvas.height);
             console.log("done!")
         }
     };
