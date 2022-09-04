@@ -29,9 +29,10 @@ export class Grid {
         if (this.shotTimer == 100) {
             const randomShoter = Math.floor(Math.random() * this.enemys.length);
             this.shots.push(new Shot(this.enemys[randomShoter].x_pos + this.enemys[randomShoter].width / 2,
-             this.enemys[randomShoter].y_pos + this.enemys[randomShoter].height / 2,
-            5, 'white', this.ctx));
-            this.frames = 0;
+                this.enemys[randomShoter].y_pos + this.enemys[randomShoter].height / 2,
+                5, 'white', this.ctx));
+            this.shotTimer = 0;
+            console.log(this.shotTimer);
         }
         this.shots.forEach((shot) => {
             if (shot.y_pos + shot.radius >= this.canvas.height) {
@@ -52,6 +53,7 @@ export class Grid {
             enemy.x_pos += this.speed;
         })
         this.shotTimer++;
+        // console.log(this.shotTimer);
     }
 
     createGrid() {
