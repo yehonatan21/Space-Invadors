@@ -19,6 +19,7 @@ export class Player {
         pressed: false
       }
     };
+    
     addEventListener('keydown', ({ key }) => {
       switch (key) {
         case 'ArrowLeft':
@@ -48,7 +49,6 @@ export class Player {
     });
 
     const image = new Image();
-    image.src = './img/spaceship.png';
     image.onload = () => {
       const scale = 0.2;
       this.image = image;
@@ -57,6 +57,7 @@ export class Player {
       this.x_pos -= this.width / 2;
       this.y_pos -= this.height;
     };
+    image.src = './img/spaceship.png';
   }
 
   draw() {

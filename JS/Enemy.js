@@ -8,12 +8,12 @@ export class Enemy {
     this.canvas = canvas;
     this.ctx = ctx;
     const image = new Image();
-    image.src = './img/invader.png';
     image.onload = () => {
       this.image = image;
       this.width = image.width;
       this.height = image.height;
     };
+    image.src = './img/invader.png';
   }
 
   draw() {
