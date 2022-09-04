@@ -128,6 +128,7 @@ export class Game {
             this.BICHYOUN = "בזבזת את הבכיון "
             this.player.lose = false;
             this.grid.enemys = [];
+            this.grid.shots = [];
             this.grid.createGrid();
         };
     };
@@ -197,6 +198,15 @@ export class Game {
             ) {
                 this.player.lose = true;
             }
+            this.grid.shots.forEach((shot) => {
+                if (shot.x_pos + shot.radius >= this.player.x_pos &&
+                    shot.x_pos + shot.radius <= this.player.x_pos + this.player.width &&
+                    shot.y_pos + shot.radius >= this.player.y_pos &&
+                    shot.y_pos + shot.radius <= this.player.y_pos + this.player.height
+                ) {
+                    this.player.lose = true;
+                }
+            })
         })
     };
 
