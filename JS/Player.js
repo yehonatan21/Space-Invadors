@@ -8,6 +8,7 @@ export class Player {
     this.x_pos = x_pos;
     this.y_pos = y_pos;
     this.score = 0;
+    this.rotate = 0;
     this.speed = 15;
     this.shots = [];
     this.lose = false;
@@ -19,7 +20,7 @@ export class Player {
         pressed: false
       }
     };
-    
+
     addEventListener('keydown', ({ key }) => {
       switch (key) {
         case 'ArrowLeft':
@@ -61,6 +62,16 @@ export class Player {
   }
 
   draw() {
+    this.ctx.save();
+    this.ctx.translate(
+      this.x_pos + this.width / 2,
+      this.y_pos + this.height / 2
+    );
+    this.ctx.rotate(this.rotate);
+    this.ctx.translate(
+      -this.x_pos - this.width / 2,
+      -this.y_pos - this.height / 2
+    );
     if (this.image) {
       this.ctx.drawImage(
         this.image,
@@ -70,14 +81,19 @@ export class Player {
         this.height
       );
     }
+    this.ctx.restore();
   }
 
   update() {
     this.draw();
     if (this.keys.arrowLeft.pressed && this.x_pos >= 0) {
       this.x_pos -= this.speed;
+      this.rotate = 25;
     } else if (this.keys.arrowRight.pressed && this.x_pos + this.width <= innerWidth) {
       this.x_pos += this.speed;
+      this.rotate = -25;
+    }else{
+      this.rotate = 0;
     }
   }
 }
