@@ -7,7 +7,7 @@ import { Stars } from './stars.js';
 
 export class Game {
     constructor(canvas) {
-        try {// TODO: check if not null, if it is - create canva element 
+        try { 
             typeof canvas.getContext !== "function"
         }
         catch (err) {
@@ -24,7 +24,7 @@ export class Game {
         this.play = true;
         this.BICHYOUNused = false;
         this.frames = 0;
-        //FIXME: static const, remove space and add in the print function
+
         this.canvas.addEventListener('click', (event) => {
             if (this.isInside(this.getMousePos(event), this.pauseBtn.x_pos, this.pauseBtn.width, this.pauseBtn.y_pos, this.pauseBtn.height)) {
                 if (this.play) {
@@ -115,9 +115,9 @@ export class Game {
                 this.grid.rows += 1;
                 this.grid.coloms += 1;
                 if (Math.sign(this.grid.speed) === 1) {
-                    this.speed += 1;
+                    this.grid.speed += 1;
                 } else {
-                    this.speed = (this.grid.speed * -1) + 1;
+                    this.grid.speed = (this.grid.speed * -1) + 1;
                 }
                 this.grid.createGrid();
                 this.frames = 0;
@@ -130,8 +130,8 @@ export class Game {
         const BICHYOUNwidth = this.getWidthOfText(Game.BICHYOUN, '20px Arial');
         const BICHYOUNheight = this.getHeightOfText(Game.BICHYOUN, '20px Arial') + this.getHeightOfText(`Score: ${this.player.score}`, '20px Arial');
 
-        if (this.isInside(mousePos, 
-            this.canvas.width - BICHYOUNwidth, // save to const
+        if (this.isInside(mousePos,
+            this.canvas.width - BICHYOUNwidth,
             this.canvas.width - BICHYOUNwidth + BICHYOUNwidth,
             BICHYOUNheight,
             BICHYOUNheight
@@ -214,7 +214,7 @@ export class Game {
                 if (shot.x_pos + shot.radius >= this.player.x_pos &&
                     shot.x_pos + shot.radius <= this.player.x_pos + this.player.width &&
                     shot.y_pos + shot.radius >= this.player.y_pos &&
-                    shot.y_pos + shot.radius <= this.player.y_pos + this.player.height/2
+                    shot.y_pos + shot.radius <= this.player.y_pos + this.player.height / 2
                 ) {
                     this.player.lose = true;
                 }
