@@ -1,8 +1,7 @@
 'use strict';
 
 export class PauseBtn {
-    constructor(ctx) {
-        this.ctx = ctx;
+    constructor() {
         this.image = new Image();
         this.image.src = './img/pause.jpg';
         this.image.onload = () => {
@@ -14,17 +13,13 @@ export class PauseBtn {
         };
     }
 
-    draw() {
-        this.ctx.drawImage(
+    draw(ctx) {
+        ctx.drawImage(
             this.image,
             this.x_pos,
             this.y_pos,
             this.width,
             this.height
         );
-    }
-
-    update() {
-        this.draw();
     }
 }

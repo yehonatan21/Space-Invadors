@@ -1,12 +1,11 @@
 'use strict';
 
 export class Enemy {
-  constructor(x_pos, y_pos, canvas, ctx) {
-    this.speed = 0;
+  constructor(x_pos, y_pos, canvasWidth) {
+    this.direction = 0;
     this.x_pos = x_pos;
     this.y_pos = y_pos;
-    this.canvas = canvas;
-    this.ctx = ctx;
+    this.canvasWidth = canvasWidth;
     const image = new Image();
     image.onload = () => {
       this.image = image;
@@ -16,9 +15,10 @@ export class Enemy {
     image.src = './img/invader.png';
   }
 
-  draw() {
+  draw(ctx) {
+    this.x_pos += this.direction;
     if (this.image) {
-      this.ctx.drawImage(
+      ctx.drawImage(
         this.image,
         this.x_pos,
         this.y_pos,
@@ -26,13 +26,8 @@ export class Enemy {
         this.height
       );
     }
-  }
-
-  update() {
-    this.x_pos += this.speed;
-    this.draw();
-    if (this.x_pos <= 0 || this.x_pos + this.width >= this.canvas.width) {
-      this.speed = -this.speed;
+    if (this.x_pos <= 0 || this.x_pos + this.width >= this.canvasWidth) {
+      this.direction = -this.direction;
     }
   }
 }

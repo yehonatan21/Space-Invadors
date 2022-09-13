@@ -3,13 +3,12 @@
 import { Shot } from "./Shot.js";
 
 export class Player {
-  constructor(ctx, x_pos, y_pos) {
-    this.ctx = ctx;
+  constructor(x_pos, y_pos) {
     this.x_pos = x_pos;
     this.y_pos = y_pos;
     this.score = 0;
     this.rotate = 0;
-    this.speed = 15;
+    this.direction = 15;
     this.shots = [];
     this.lose = false;
     this.keys = {
@@ -32,7 +31,7 @@ export class Player {
           break;
 
         case ' ':
-          this.shots.push(new Shot(this.x_pos + this.width / 2, this.y_pos, -15, 'red', this.ctx));
+          this.shots.push(new Shot(this.x_pos + this.width / 2, this.y_pos, -15, 'red', this.ctx)); // FIXME: how create new shpt without passing the ctx 
           break;
       }
     });
@@ -61,19 +60,19 @@ export class Player {
     image.src = './img/spaceship.png';
   }
 
-  draw() {
-    this.ctx.save();
-    this.ctx.translate(
+  draw(ctx) {
+    ctx.save();
+    ctx.translate(
       this.x_pos + this.width / 2,
       this.y_pos + this.height / 2
     );
-    this.ctx.rotate(this.rotate);
-    this.ctx.translate(
+    ctx.rotate(this.rotate);
+    ctx.translate(
       -this.x_pos - this.width / 2,
       -this.y_pos - this.height / 2
     );
     if (this.image) {
-      this.ctx.drawImage(
+      ctx.drawImage(
         this.image,
         this.x_pos,
         this.y_pos,
@@ -81,19 +80,19 @@ export class Player {
         this.height
       );
     }
-    this.ctx.restore();
-  }
+    ctx.restore();
 
-  update() {
-    this.draw();
     if (this.keys.arrowLeft.pressed && this.x_pos >= 0) {
-      this.x_pos -= this.speed;
+      this.x_pos -= this.direction;
       this.rotate = 25;
     } else if (this.keys.arrowRight.pressed && this.x_pos + this.width <= innerWidth) {
-      this.x_pos += this.speed;
+      this.x_pos += this.direction;
       this.rotate = -25;
-    }else{
+    } else {
       this.rotate = 0;
     }
+    this.shots.forEach((shot) => {
+      shot.draw(ctx);
+    })
   }
 }
